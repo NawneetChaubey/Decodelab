@@ -2,6 +2,8 @@
 
 A Rule-Based AI Chatbot built using Python and Streamlit.
 
+## Live demo - https://logicbot-ai.streamlit.app/
+
 ## Features
 
 * Rule-Based Responses
