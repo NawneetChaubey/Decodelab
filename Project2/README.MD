@@ -4,6 +4,7 @@ A simple and interactive **Iris Flower Classification** web application built us
 
 This project was developed as **Project 2** of the **DecodeLabs Artificial Intelligence Internship Program**.
 
+Live demo - https://flowersense-ai.streamlit.app/
 ---
 
 ## 📌 Project Overview
