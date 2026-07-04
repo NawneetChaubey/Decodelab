@@ -4,6 +4,7 @@ An AI-powered course recommendation system built using **Python**, **Streamlit**
 
 This project was developed as **Project 3** of the **DecodeLabs Artificial Intelligence Internship Program**.
 
+Live Demo - https://course-recommender-ai.streamlit.app/
 ---
 
 ## 📌 Project Overview
