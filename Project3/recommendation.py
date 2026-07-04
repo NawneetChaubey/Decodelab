@@ -6,7 +6,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 # loading the datasets
-courses = pd.read_csv("courses.csv")
+courses = pd.read_csv("data/courses.csv")
 
 # creating the search text 
 courses["content"]=(
