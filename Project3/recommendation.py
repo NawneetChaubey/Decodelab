@@ -2,11 +2,15 @@
 
 # importing the python libraries 
 import pandas as pd
+from pathlib import Path
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 # loading the datasets
-courses = pd.read_csv("data/courses.csv")
+BASE_DIR = Path(__file__).resolve().parent
+DATA_PATH = BASE_DIR / "data" / "courses.csv"
+
+courses = pd.read_csv(DATA_PATH)
 
 # creating the search text 
 courses["content"]=(
