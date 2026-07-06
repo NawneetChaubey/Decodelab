@@ -4,6 +4,7 @@ An AI-powered Optical Character Recognition (OCR) application built using **Pyth
 
 This project was developed as **Project 4** of the **DecodeLabs Artificial Intelligence Internship Program**.
 
+Live Demo - https://ai-image-text-recognition.streamlit.app/
 ---
 
 ## 📌 Project Overview
