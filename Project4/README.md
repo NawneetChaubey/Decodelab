@@ -60,10 +60,6 @@ AI-Image-Text-Recognition/
 ├── image_utils.py
 ├── requirements.txt
 ├── README.md
-├── .gitignore
-│
-├── sample_images/
-└── output/
 ```
 
 ---
