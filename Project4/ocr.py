@@ -12,11 +12,13 @@ from PIL import Image
 # EasyOCR Reader
 # ==========================================
 
-reader = easyocr.Reader(
-    ['en'],
-    gpu=False,
-    verbose=False
-)
+@st.cache_resource
+def get_reader():
+    return easyocr.Reader(
+        ['en'],
+        gpu=False,
+        verbose=False
+    )
 
 # ==========================================
 # Image Preprocessing
@@ -101,7 +103,7 @@ def extract_text(image):
 def extract_text_with_confidence(image):
 
     processed = preprocess_image(image)
-
+    reader = get_reader()
     result = reader.readtext(
         processed,
         detail=1,
