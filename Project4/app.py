@@ -3,6 +3,10 @@ from PIL import Image
 import easyocr
 from ocr import (
     extract_text_with_confidence,
+    extract_text,
+    draw_boxes,
+    save_text,
+    supported_languages
 )
 
 from image_utils import (
