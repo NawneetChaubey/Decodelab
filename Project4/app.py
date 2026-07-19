@@ -1,6 +1,6 @@
 import streamlit as st
 from PIL import Image
-
+import easyocr
 from ocr import (
     extract_text_with_confidence,
 )
@@ -11,6 +11,14 @@ from image_utils import (
     threshold,
     resize
 )
+
+@st.cache_resource
+def get_reader():
+    return easyocr.Reader(
+        ['en'],
+        gpu=False,
+        verbose=False
+    )
 
 # ==========================
 # Page Configuration
