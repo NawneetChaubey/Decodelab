@@ -9,12 +9,13 @@ import numpy as np
 from PIL import Image
 
 # ==========================================
-# Initialize EasyOCR Reader
+# EasyOCR Reader
 # ==========================================
 
 reader = easyocr.Reader(
     ['en'],
-    gpu=False
+    gpu=False,
+    verbose=False
 )
 
 # ==========================================
@@ -23,41 +24,67 @@ reader = easyocr.Reader(
 
 def preprocess_image(image):
 
-    # Convert PIL Image to NumPy
+    # PIL -> NumPy
     img = np.array(image)
 
     # RGB -> BGR
-    img = cv2.cvtColor(
+    img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+
+    # Resize (3x for better OCR)
+    img = cv2.resize(
         img,
-        cv2.COLOR_RGB2BGR
+        None,
+        fx=3,
+        fy=3,
+        interpolation=cv2.INTER_CUBIC
     )
 
-    # Convert to Grayscale
+    # Gray
     gray = cv2.cvtColor(
         img,
         cv2.COLOR_BGR2GRAY
     )
 
-    # Reduce Noise
-    blur = cv2.GaussianBlur(
+    # Denoise
+    gray = cv2.fastNlMeansDenoising(
         gray,
-        (5,5),
-        0
+        None,
+        12,
+        7,
+        21
     )
 
-    # Binary Threshold
-    threshold = cv2.threshold(
-        blur,
-        0,
-        255,
-        cv2.THRESH_BINARY + cv2.THRESH_OTSU
-    )[1]
+    # Contrast Enhancement
+    gray = cv2.equalizeHist(gray)
 
-    return threshold
+    # Sharpen
+    kernel = np.array([
+        [0,-1,0],
+        [-1,5,-1],
+        [0,-1,0]
+    ])
+
+    gray = cv2.filter2D(
+        gray,
+        -1,
+        kernel
+    )
+
+    # Adaptive Threshold
+    thresh = cv2.adaptiveThreshold(
+        gray,
+        255,
+        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+        cv2.THRESH_BINARY,
+        31,
+        11
+    )
+
+    return thresh
 
 
 # ==========================================
-# Extract Text Only
+# OCR
 # ==========================================
 
 def extract_text(image):
@@ -68,30 +95,39 @@ def extract_text(image):
 
 
 # ==========================================
-# Extract Text + Confidence
+# OCR + Confidence
 # ==========================================
 
 def extract_text_with_confidence(image):
 
     processed = preprocess_image(image)
 
-    result = reader.readtext(processed)
+    result = reader.readtext(
+        processed,
+        detail=1,
+        paragraph=True,
+        decoder="beamsearch",
+        contrast_ths=0.05,
+        adjust_contrast=0.7,
+        width_ths=0.7,
+        height_ths=0.7
+    )
 
     words = []
-
     confidence = []
 
     for detection in result:
 
-        text = detection[1]
-
+        text = detection[1].strip()
         score = detection[2]
 
-        words.append(text)
+        # Ignore low confidence garbage
+        if score > 0.45:
 
-        confidence.append(score * 100)
+            words.append(text)
+            confidence.append(score * 100)
 
-    final_text = " ".join(words)
+    final_text = "\n".join(words)
 
     avg_confidence = (
         sum(confidence) / len(confidence)
@@ -99,7 +135,7 @@ def extract_text_with_confidence(image):
         else 0
     )
 
-    return final_text, round(avg_confidence, 2)
+    return final_text, round(avg_confidence,2)
 
 
 # ==========================================
@@ -141,7 +177,7 @@ def draw_boxes(image):
 
 
 # ==========================================
-# Save Extracted Text
+# Save Text
 # ==========================================
 
 def save_text(
@@ -159,11 +195,9 @@ def save_text(
 
 
 # ==========================================
-# Supported Languages
+# Languages
 # ==========================================
 
 def supported_languages():
 
-    return [
-        "English"
-    ]
+    return ["English"]
