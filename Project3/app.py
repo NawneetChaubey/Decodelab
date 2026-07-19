@@ -6,7 +6,8 @@ from recommendation import(
     recommend_courses,
     dataset_info,
     get_categories,
-    preview
+    preview,
+    courses
 )
 
 # streamlit page Configuration 
@@ -134,25 +135,24 @@ st.dataframe(
 
 # Category Distribution 
 st.subheader("📊 Category Distribution")
-courses = preview()
 
-full_courses = pd.read_csv("data/courses.csv")
+full_courses = courses
 
-category_count = (
-    full_courses["Category"].value_counts()
-)
+category_count = full_courses["Category"].value_counts()
 
-fig , ax = plt.subplots(figsize=(8,5))
+fig, ax = plt.subplots(figsize=(8,5))
 
 category_count.plot(
     kind="bar",
-    ax=ax
+    ax=ax,
+    color="skyblue"
 )
 
 ax.set_xlabel("Category")
-ax.set_ylabel("Courses")
+ax.set_ylabel("Number of Courses")
 ax.set_title("Courses by Category")
 
+plt.xticks(rotation=45)
 
 st.pyplot(fig)
 
