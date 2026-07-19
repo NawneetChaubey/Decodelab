@@ -2,7 +2,7 @@
 # AI Image Text Recognition
 # OCR Engine using EasyOCR
 # ==========================================
-
+import streamlit as st
 import easyocr
 import cv2
 import numpy as np
